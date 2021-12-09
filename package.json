@@ -4,21 +4,33 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "rimraf dist",
+    "build": "npm-run-all --sequential clean format lint copy bundle",
+    "format": "prettier \"**/*.js\" --write",
+    "lint": "eslint 'src/**/*.js' --fix",
+    "copy": "cpx \"src/public/index.html\" dist/public/. && cpx \"src/server.js\" dist/.",
+    "bundle": "browserify -o dist/public/bundle.js src/public/browser.js && browserify -o dist/main.js src/main.js",
+    "server-run": "cd dist && node server.js",
+    "node-run": "cd dist && node main.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "browserify": "^17.0.0",
     "express": "^4.17.1"
   },
   "devDependencies": {
+    "browserify": "^17.0.0",
+    "cpx": "^1.5.0",
     "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.2.0",
-    "jquery": "^3.6.0"
+    "jquery": "^3.6.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.5.1",
+    "rimraf": "^3.0.2"
   }
 }

@@ -6,7 +6,7 @@ const $ = require("jquery");
 
 let gameCount = 1;
 
-function result (board) {
+function result(board) {
   for (let i = 0; i < constant.lineLength; i++) {
     for (let j = 0; j < constant.rowLength; j++) {
       let str = "";
@@ -15,7 +15,7 @@ function result (board) {
       } else if (board.cells[i][j].getStatus() === constant.White) {
         str = "<p>白</p>";
       } else {
-        str = "<p>　</p>";
+        str = "<p>空</p>";
       }
       const tableTd = $(`#table_td__${i}__${j}`);
       tableTd.empty();
@@ -33,7 +33,7 @@ function result (board) {
   }
 }
 
-function showTable (board) {
+function showTable(board) {
   let blankCount = 0;
   for (let i = 0; i < constant.lineLength; i++) {
     for (let j = 0; j < constant.rowLength; j++) {
@@ -43,7 +43,7 @@ function showTable (board) {
       } else if (board.cells[i][j].getStatus() === constant.White) {
         str = `<button id="button__${i}__${j}">白</button>`;
       } else {
-        str = `<button id="button__${i}__${j}">　</button>`;
+        str = `<button id="button__${i}__${j}">空</button>`;
         blankCount++;
       }
       const tableTd = $(`#table_td__${i}__${j}`);
@@ -54,7 +54,10 @@ function showTable (board) {
           $("#message_id").empty();
           $("#message_id").append("<p>白のターン</p>");
           gameCount++;
-        } else if (gameCount % 2 === 0 && board.setStone(i, j, constant.White)) {
+        } else if (
+          gameCount % 2 === 0 &&
+          board.setStone(i, j, constant.White)
+        ) {
           $("#message_id").empty();
           $("#message_id").append("<p>黒のターン</p>");
           gameCount++;
