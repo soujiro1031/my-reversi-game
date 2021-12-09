@@ -28,5 +28,7 @@ const vector = Object.freeze({
 });
 
 module.exports = {
-  constant, usableStoneStatus, vector
+  constant,
+  usableStoneStatus,
+  vector
 };

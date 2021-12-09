@@ -4,11 +4,11 @@ const Cell = require("./cell");
 const { constant, usableStoneStatus, vector } = require("./constant");
 
 module.exports = class Board {
-  constructor () {
+  constructor() {
     this.initialize();
   }
 
-  initialize () {
+  initialize() {
     this.cells = [];
     for (let i = 0; i < constant.lineLength; i++) {
       this.cells[i] = [];
@@ -22,7 +22,7 @@ module.exports = class Board {
     this.cells[4][3].setStatus(constant.Black);
   }
 
-  searchUsableCell () {
+  searchUsableCell() {
     for (let i = 0; i < constant.lineLength; i++) {
       for (let j = 0; j < constant.rowLength; j++) {
         this.cells[i][j].setUsable(usableStoneStatus.None);
@@ -37,21 +37,25 @@ module.exports = class Board {
     }
   }
 
-  getUsableCell (stone) {
+  getUsableCell(stone) {
     const list = [];
     for (let i = 0; i < constant.lineLength; i++) {
       for (let j = 0; j < constant.rowLength; j++) {
         if (stone === constant.Black) {
-          if (this.cells[i][j].getUsable() === usableStoneStatus.Black ||
-                        this.cells[i][j].getUsable() === usableStoneStatus.Both) {
+          if (
+            this.cells[i][j].getUsable() === usableStoneStatus.Black ||
+            this.cells[i][j].getUsable() === usableStoneStatus.Both
+          ) {
             list.push({
               line: i,
               row: j
             });
           }
         } else if (stone === constant.White) {
-          if (this.cells[i][j].getUsable() === usableStoneStatus.White ||
-                        this.cells[i][j].getUsable() === usableStoneStatus.Both) {
+          if (
+            this.cells[i][j].getUsable() === usableStoneStatus.White ||
+            this.cells[i][j].getUsable() === usableStoneStatus.Both
+          ) {
             list.push({
               line: i,
               row: j
@@ -63,18 +67,22 @@ module.exports = class Board {
     return list;
   }
 
-  setStone (line, row, stone) {
+  setStone(line, row, stone) {
     if (stone === constant.Black) {
-      if (this.cells[line][row].getUsable() === usableStoneStatus.Black ||
-              this.cells[line][row].getUsable() === usableStoneStatus.Both) {
+      if (
+        this.cells[line][row].getUsable() === usableStoneStatus.Black ||
+        this.cells[line][row].getUsable() === usableStoneStatus.Both
+      ) {
         this.cells[line][row].setStatus(stone);
         this.reverseStone(line, row, stone);
         return true;
       }
       return false;
     } else if (stone === constant.White) {
-      if (this.cells[line][row].getUsable() === usableStoneStatus.White ||
-              this.cells[line][row].getUsable() === usableStoneStatus.Both) {
+      if (
+        this.cells[line][row].getUsable() === usableStoneStatus.White ||
+        this.cells[line][row].getUsable() === usableStoneStatus.Both
+      ) {
         this.cells[line][row].setStatus(stone);
         this.reverseStone(line, row, stone);
         return true;
@@ -85,20 +93,36 @@ module.exports = class Board {
     }
   }
 
-  reverseStone (line, row, stone) {
+  reverseStone(line, row, stone) {
     for (let i = line - 1; i <= line + 1; i++) {
       for (let j = row - 1; j <= row + 1; j++) {
-        if (!(i === line && j === row) &&
-                i >= 0 && i < constant.lineLength &&
-                j >= 0 && j < constant.rowLength) {
+        if (
+          !(i === line && j === row) &&
+          i >= 0 &&
+          i < constant.lineLength &&
+          j >= 0 &&
+          j < constant.rowLength
+        ) {
           if (stone === constant.Black) {
             if (this.cells[i][j].getStatus() === constant.White) {
-              const sandStone = this.getSandStone(i, j, line, row, constant.White);
+              const sandStone = this.getSandStone(
+                i,
+                j,
+                line,
+                row,
+                constant.White
+              );
               this.reverse(line, row, sandStone.count, sandStone.vector, stone);
             }
           } else if (stone === constant.White) {
             if (this.cells[i][j].getStatus() === constant.Black) {
-              const sandStone = this.getSandStone(i, j, line, row, constant.Black);
+              const sandStone = this.getSandStone(
+                i,
+                j,
+                line,
+                row,
+                constant.Black
+              );
               this.reverse(line, row, sandStone.count, sandStone.vector, stone);
             }
           }
@@ -107,7 +131,7 @@ module.exports = class Board {
     }
   }
 
-  reverse (line, row, count, vectorStone, stone) {
+  reverse(line, row, count, vectorStone, stone) {
     let x = line;
     let y = row;
     for (let cnt = 0; cnt < count; cnt++) {
@@ -136,7 +160,7 @@ module.exports = class Board {
     }
   }
 
-  setUsable (line, row) {
+  setUsable(line, row) {
     for (let i = line - 1; i <= line + 1; i++) {
       for (let j = row - 1; j <= row + 1; j++) {
         if (this.isValidCell(line, row, i, j)) {
@@ -148,14 +172,18 @@ module.exports = class Board {
             } else {
               if (this.cells[i][j].getUsable() === usableStoneStatus.None) {
                 this.cells[i][j].setUsable(usableStoneStatus.Black);
-              } else if (this.cells[i][j].getUsable() === usableStoneStatus.White) {
+              } else if (
+                this.cells[i][j].getUsable() === usableStoneStatus.White
+              ) {
                 this.cells[i][j].setUsable(usableStoneStatus.Both);
               }
             }
           } else if (whiteCount > 0) {
             if (this.cells[i][j].getUsable() === usableStoneStatus.None) {
               this.cells[i][j].setUsable(usableStoneStatus.White);
-            } else if (this.cells[i][j].getUsable() === usableStoneStatus.Black) {
+            } else if (
+              this.cells[i][j].getUsable() === usableStoneStatus.Black
+            ) {
               this.cells[i][j].setUsable(usableStoneStatus.Both);
             }
           }
@@ -164,15 +192,19 @@ module.exports = class Board {
     }
   }
 
-  isValidCell (line, row, i, j) {
-    return (!(i === line && j === row) &&
-          i >= 0 && i < constant.lineLength &&
-          j >= 0 && j < constant.rowLength &&
-          this.cells[i][j].getStatus() === constant.Blank &&
-          this.cells[i][j].getUsable() !== usableStoneStatus.Both);
+  isValidCell(line, row, i, j) {
+    return (
+      !(i === line && j === row) &&
+      i >= 0 &&
+      i < constant.lineLength &&
+      j >= 0 &&
+      j < constant.rowLength &&
+      this.cells[i][j].getStatus() === constant.Blank &&
+      this.cells[i][j].getUsable() !== usableStoneStatus.Both
+    );
   }
 
-  puttableBlack (line, row, i, j) {
+  puttableBlack(line, row, i, j) {
     if (this.cells[line][row].getStatus() === constant.Black) {
       return 0;
     }
@@ -180,7 +212,7 @@ module.exports = class Board {
     return count;
   }
 
-  puttableWhite (line, row, i, j) {
+  puttableWhite(line, row, i, j) {
     if (this.cells[line][row].getStatus() === constant.White) {
       return 0;
     }
@@ -188,7 +220,7 @@ module.exports = class Board {
     return count;
   }
 
-  getVector (line, row, i, j) {
+  getVector(line, row, i, j) {
     if (i === line - 1) {
       if (j === row - 1) {
         return vector.BottomRight;
@@ -224,7 +256,7 @@ module.exports = class Board {
     }
   }
 
-  getSandStone (line, row, i, j, stone) {
+  getSandStone(line, row, i, j, stone) {
     const vectorStone = this.getVector(line, row, i, j);
     let x = line;
     let y = row;
@@ -251,8 +283,9 @@ module.exports = class Board {
         x++;
         y--;
       }
-      if (!(x >= 0 && x < constant.lineLength &&
-                y >= 0 && y < constant.rowLength)) {
+      if (
+        !(x >= 0 && x < constant.lineLength && y >= 0 && y < constant.rowLength)
+      ) {
         return 0;
       }
       if (this.cells[x][y].getStatus() === constant.Blank) {
@@ -269,7 +302,7 @@ module.exports = class Board {
     };
   }
 
-  getWinner () {
+  getWinner() {
     let black = 0;
     let white = 0;
     for (let i = 0; i < constant.lineLength; i++) {
@@ -290,7 +323,7 @@ module.exports = class Board {
     }
   }
 
-  printTable () {
+  printTable() {
     console.log("ーーーーーーーーーーーーーーーーー");
     for (let i = 0; i < constant.lineLength; i++) {
       let str = "｜";
@@ -300,9 +333,12 @@ module.exports = class Board {
         } else if (this.cells[i][j].getStatus() === constant.White) {
           str += "白｜";
         } else if (this.cells[i][j].getStatus() === constant.Blank) {
-          str += `${this.cells[i][j].getUsable().toString().replace(/[A-Za-z0-9]/g, function (s) {
-                        return String.fromCharCode(s.charCodeAt(0) + 0xFEE0);
-                    })}｜`;
+          str += `${this.cells[i][j]
+            .getUsable()
+            .toString()
+            .replace(/[A-Za-z0-9]/g, function (s) {
+              return String.fromCharCode(s.charCodeAt(0) + 0xfee0);
+            })}｜`;
         }
       }
       console.log(str);

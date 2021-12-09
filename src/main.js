@@ -1,12 +1,12 @@
 "use strict";
 
-const Board = require("./board");
-const { constant } = require("./constant");
+const Board = require("./public/board");
+const { constant } = require("./public/constant");
 
 let winBlack = 0;
 let winWhite = 0;
 let drow = 0;
-function main () {
+function main() {
   const board = new Board();
   board.initialize();
   board.searchUsableCell();
