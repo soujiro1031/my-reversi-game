@@ -7,13 +7,14 @@ $ npm i
 ## Browser
 
 ```console
-$ npx -o bundle.js browser.js
-$ node server.js
+$ npm run build
+$ npm run server-run
 $ firefox localhost:3000
 ```
 
 ## CLI
 
 ```console
-$ node main.js
+$ npm run build
+$ npm run node-run
 ```
