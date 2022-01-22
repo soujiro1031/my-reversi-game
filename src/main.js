@@ -95,12 +95,16 @@ function LookAheadPlayer(board, color) {
 
 function blackPlayer(board) {
   // console.log("Black Turn");
-  randomPlayer(board, constant.Black);
+  // randomPlayer(board, constant.Black); ランダムプレイヤー
+  // maxPlayer(board, constant.Black);　　最大選択プレイヤー
+  // LookAheadPlayer(board, constant.White);　先読みプレイヤー
 }
 
 function whitePlayer(board) {
   // console.log("White Turn");
-  LookAheadPlayer(board, constant.White);
+  // randomPlayer(board, constant.Black); ランダムプレイヤー
+  // maxPlayer(board, constant.Black);　　最大選択プレイヤー
+  // LookAheadPlayer(board, constant.White);　先読みプレイヤー
 }
 
 function main() {
@@ -127,7 +131,6 @@ const time = performance.now();
 for (let i = 0; i < 10000; i++) {
   main();
 }
-console.log(`time: ${performance.now - time}`);
 console.log(`black win: ${winBlack}`);
 console.log(`white win: ${winWhite}`);
 console.log(`drow: ${drow}`);
