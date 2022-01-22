@@ -93,6 +93,72 @@ module.exports = class Board {
     }
   }
 
+  getReverseStoneCount(line, row, stone) {
+    if (stone === constant.Black) {
+      if (
+        this.cells[line][row].getUsable() === usableStoneStatus.Black ||
+        this.cells[line][row].getUsable() === usableStoneStatus.Both
+      ) {
+        return this.reversableStoneCount(line, row, stone);
+      }
+      return 0;
+    } else if (stone === constant.White) {
+      if (
+        this.cells[line][row].getUsable() === usableStoneStatus.White ||
+        this.cells[line][row].getUsable() === usableStoneStatus.Both
+      ) {
+        return this.reversableStoneCount(line, row, stone);
+      }
+      return 0;
+    } else {
+      return 0;
+    }
+  }
+
+  reversableStoneCount(line, row, stone) {
+    let count = 0;
+    for (let i = line - 1; i <= line + 1; i++) {
+      for (let j = row - 1; j <= row + 1; j++) {
+        if (
+          !(i === line && j === row) &&
+          i >= 0 &&
+          i < constant.lineLength &&
+          j >= 0 &&
+          j < constant.rowLength
+        ) {
+          if (stone === constant.Black) {
+            if (this.cells[i][j].getStatus() === constant.White) {
+              const sandStone = this.getSandStone(
+                i,
+                j,
+                line,
+                row,
+                constant.White
+              );
+              if (sandStone.count !== undefined) {
+                count += sandStone.count;
+              }
+            }
+          } else if (stone === constant.White) {
+            if (this.cells[i][j].getStatus() === constant.Black) {
+              const sandStone = this.getSandStone(
+                i,
+                j,
+                line,
+                row,
+                constant.Black
+              );
+              if (sandStone.count !== undefined) {
+                count += sandStone.count;
+              }
+            }
+          }
+        }
+      }
+    }
+    return count;
+  }
+
   reverseStone(line, row, stone) {
     for (let i = line - 1; i <= line + 1; i++) {
       for (let j = row - 1; j <= row + 1; j++) {
@@ -208,16 +274,22 @@ module.exports = class Board {
     if (this.cells[line][row].getStatus() === constant.Black) {
       return 0;
     }
-    const count = this.getSandStone(line, row, i, j, constant.White).count;
-    return count;
+    const count = this.getSandStone(line, row, i, j, constant.White);
+    if (count.count === undefined) {
+      return 0;
+    }
+    return count.count;
   }
 
   puttableWhite(line, row, i, j) {
     if (this.cells[line][row].getStatus() === constant.White) {
       return 0;
     }
-    const count = this.getSandStone(line, row, i, j, constant.Black).count;
-    return count;
+    const count = this.getSandStone(line, row, i, j, constant.Black);
+    if (count.count === undefined) {
+      return 0;
+    }
+    return count.count;
   }
 
   getVector(line, row, i, j) {
@@ -286,10 +358,10 @@ module.exports = class Board {
       if (
         !(x >= 0 && x < constant.lineLength && y >= 0 && y < constant.rowLength)
       ) {
-        return 0;
+        return {};
       }
       if (this.cells[x][y].getStatus() === constant.Blank) {
-        return 0;
+        return {};
       } else if (this.cells[x][y].getStatus() === stone) {
         count++;
       } else {
@@ -344,5 +416,16 @@ module.exports = class Board {
       console.log(str);
       console.log("ーーーーーーーーーーーーーーーーー");
     }
+  }
+
+  deepcopyBoard() {
+    const newBoard = new Board();
+    for (let i = 0; i < constant.lineLength; i++) {
+      for (let j = 0; j < constant.rowLength; j++) {
+        newBoard.cells[i][j].setStatus(this.cells[i][j].getStatus());
+        newBoard.cells[i][j].setUsable(this.cells[i][j].getUsable());
+      }
+    }
+    return newBoard;
   }
 };
